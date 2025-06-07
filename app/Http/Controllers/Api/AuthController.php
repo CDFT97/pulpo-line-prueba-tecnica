@@ -39,7 +39,7 @@ class AuthController extends Controller
      *         )
      *     ),
      *     @OA\Response(
-     *         response="200",
+     *         response="201",
      *         description="Successful response",
      *         @OA\JsonContent(
      *             type="array",
@@ -62,7 +62,7 @@ class AuthController extends Controller
             return response()->json([
                 'user' => UserResource::make($user),
                 'message' => "Register successfully"
-            ], Response::HTTP_OK);
+            ], Response::HTTP_CREATED);
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error($e->getMessage());
