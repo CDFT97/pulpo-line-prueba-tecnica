@@ -203,6 +203,83 @@
                     }
                 ]
             }
+        },
+        "/get-weather-by-city": {
+            "post": {
+                "tags": [
+                    "Weather"
+                ],
+                "summary": "Obtener clima por ciudad",
+                "description": "Obtiene el clina de una ciudad determinada",
+                "operationId": "1b3bf575e880094fe3d81b1d05da8f50",
+                "parameters": [
+                    {
+                        "name": "lang",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "description": "Código de idioma (opcional)",
+                            "type": "string",
+                            "example": "es"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "city"
+                                ],
+                                "properties": {
+                                    "city": {
+                                        "type": "string",
+                                        "example": "Madrid"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Respuesta exitosa",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/WeatherCityResource"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Credenciales inválidas",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthorized"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
         }
     },
     "components": {
@@ -223,6 +300,80 @@
                         "description": "Email of User",
                         "type": "string",
                         "example": "pedro@gmail.com"
+                    }
+                },
+                "type": "object"
+            },
+            "WeatherCityResource": {
+                "properties": {
+                    "city": {
+                        "properties": {
+                            "name": {
+                                "description": "Nombre de la ciudad",
+                                "type": "string",
+                                "example": "Maturín"
+                            },
+                            "region": {
+                                "description": "Región o estado de la ciudad",
+                                "type": "string",
+                                "example": "Monagas"
+                            },
+                            "country": {
+                                "description": "País donde se encuentra la ciudad",
+                                "type": "string",
+                                "example": "Venezuela"
+                            },
+                            "tz_id": {
+                                "description": "Zona horaria de la ciudad",
+                                "type": "string",
+                                "example": "America/Caracas"
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "temp_c": {
+                        "description": "Temperatura en grados Celsius",
+                        "type": "number",
+                        "format": "float",
+                        "example": 28
+                    },
+                    "temp_f": {
+                        "description": "Temperatura en grados Fahrenheit",
+                        "type": "number",
+                        "format": "float",
+                        "example": 82.4
+                    },
+                    "weather": {
+                        "description": "Descripción del clima actual",
+                        "type": "string",
+                        "example": "Light rain shower"
+                    },
+                    "wind_kph": {
+                        "description": "Velocidad del viento en kilómetros por hora",
+                        "type": "number",
+                        "format": "float",
+                        "example": 15.1
+                    },
+                    "wind_mph": {
+                        "description": "Velocidad del viento en millas por hora",
+                        "type": "number",
+                        "format": "float",
+                        "example": 9.4
+                    },
+                    "humidity": {
+                        "description": "Porcentaje de humedad",
+                        "type": "integer",
+                        "example": 100
+                    },
+                    "local_time": {
+                        "description": "Hora local en formato epoch/unix timestamp",
+                        "type": "integer",
+                        "example": 1749319106
+                    },
+                    "parsed_localtime": {
+                        "description": "Hora local formateada (DD/MM/YYYY HH:MM:SS)",
+                        "type": "string",
+                        "example": "07/06/2025 13:58:26"
                     }
                 },
                 "type": "object"
@@ -273,6 +424,10 @@
         {
             "name": "Auth",
             "description": "Auth"
+        },
+        {
+            "name": "Weather",
+            "description": "Weather"
         }
     ]
 }

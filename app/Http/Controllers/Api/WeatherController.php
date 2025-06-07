@@ -19,6 +19,43 @@ class WeatherController extends Controller
         $this->initializeCacheSettings($weatherapiService);
     }
 
+    /**
+     * @OA\Post(
+     *     path="/get-weather-by-city",
+     *     tags={"Weather"},
+     *     summary="Obtener clima por ciudad", 
+     *     description="Obtiene el clina de una ciudad determinada",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\RequestBody( 
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"city"},
+     *             @OA\Property(property="city", type="string", example="Madrid"),
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *      name="lang",
+     *      in="query",
+     *      required=false,
+     *      @OA\Schema(type="string", example="es", description="Código de idioma (opcional)")
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="Respuesta exitosa",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(ref="#/components/schemas/WeatherCityResource")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Credenciales inválidas",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Unauthorized")
+     *         )
+     *     ),
+     * )
+     */
     public function getWeatherByCity(WeatherCityRequest $request)
     {
         try {
@@ -33,7 +70,6 @@ class WeatherController extends Controller
                 'expires_in' => $weatherData['expiresIn'],
                 'cache_status' => $weatherData['cacheStatus'],
             ], Response::HTTP_OK);
-            
         } catch (\Throwable $th) {
             Log::error($th);
             return response()->json([

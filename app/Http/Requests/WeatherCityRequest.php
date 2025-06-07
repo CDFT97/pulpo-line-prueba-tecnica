@@ -28,7 +28,6 @@ class WeatherCityRequest extends FormRequest
     {
         return [
             'city' => 'required|string|max:150',
-            'lang' => 'string|max:150',
         ];
     }
 
