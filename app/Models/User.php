@@ -46,4 +46,14 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function searches()
+    {
+        return $this->hasMany(UserSearch::class)->latest('searched_at');
+    }
+
+    public function favorites()
+    {
+        return $this->hasMany(UserFavorite::class)->latest();
+    }
 }

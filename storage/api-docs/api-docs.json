@@ -210,7 +210,7 @@
                     "Weather"
                 ],
                 "summary": "Obtener clima por ciudad",
-                "description": "Obtiene el clina de una ciudad determinada",
+                "description": "Obtiene el clima de una ciudad determinada y registra la búsqueda",
                 "operationId": "1b3bf575e880094fe3d81b1d05da8f50",
                 "parameters": [
                     {
@@ -249,10 +249,28 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/WeatherCityResource"
-                                    }
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/WeatherCityResource"
+                                        },
+                                        "cached": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "expires_in": {
+                                            "type": "string",
+                                            "example": "24 minutes"
+                                        },
+                                        "cache_status": {
+                                            "type": "string",
+                                            "example": "valid"
+                                        },
+                                        "is_favorite": {
+                                            "type": "boolean",
+                                            "example": false
+                                        }
+                                    },
+                                    "type": "object"
                                 }
                             }
                         }
@@ -280,10 +298,181 @@
                     }
                 ]
             }
+        },
+        "/toggle-favorite": {
+            "post": {
+                "tags": [
+                    "Weather"
+                ],
+                "summary": "Alternar ciudad favorita",
+                "description": "Añade o elimina una ciudad de favoritos",
+                "operationId": "d82b914ab299fceee8a1eb342935486e",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "city_id"
+                                ],
+                                "properties": {
+                                    "city_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Operación exitosa",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Ciudad agregada a favoritos"
+                                        },
+                                        "is_favorite": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Ciudad no encontrada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/recent-searches": {
+            "get": {
+                "tags": [
+                    "Weather"
+                ],
+                "summary": "Obtener búsquedas recientes",
+                "description": "Devuelve las últimas ciudades buscadas por el usuario",
+                "operationId": "c0891a3659ef8ba14099c35499479c1c",
+                "responses": {
+                    "200": {
+                        "description": "Lista de búsquedas recientes",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/City"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/favorites": {
+            "get": {
+                "tags": [
+                    "Weather"
+                ],
+                "summary": "Obtener ciudades favoritas",
+                "description": "Devuelve las ciudades marcadas como favoritas por el usuario",
+                "operationId": "324cc07691f449033be8c949a311c2ff",
+                "responses": {
+                    "200": {
+                        "description": "Lista de ciudades favoritas",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/City"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
         }
     },
     "components": {
         "schemas": {
+            "City": {
+                "properties": {
+                    "id": {
+                        "description": "ID único de la ciudad",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "description": "Nombre de la ciudad",
+                        "type": "string",
+                        "example": "Madrid"
+                    },
+                    "region": {
+                        "description": "Región o estado de la ciudad",
+                        "type": "string",
+                        "example": "Madrid"
+                    },
+                    "country": {
+                        "description": "País donde se encuentra la ciudad",
+                        "type": "string",
+                        "example": "Spain"
+                    },
+                    "timezone": {
+                        "description": "Zona horaria de la ciudad",
+                        "type": "string",
+                        "example": "Europe/Madrid"
+                    },
+                    "created_at": {
+                        "description": "Fecha de creación del registro",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2023-01-01T00:00:00.000000Z"
+                    },
+                    "updated_at": {
+                        "description": "Fecha de última actualización",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2023-01-01T00:00:00.000000Z"
+                    }
+                },
+                "type": "object"
+            },
             "UserResource": {
                 "properties": {
                     "id": {

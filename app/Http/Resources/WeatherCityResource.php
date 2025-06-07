@@ -111,7 +111,7 @@ class WeatherCityResource extends JsonResource
             'humidity' => $this->current->humidity,
             'local_time' => $this->location->localtime_epoch,
             'parsed_localtime' => Carbon::createFromTimestamp($this->location->localtime_epoch)
-                ->setTimezone($this->location->tz_id) // Ajusta a la zona horaria de la ciudad
+                ->setTimezone($this->location->tz_id) // Set timezone to the city's timezone
                 ->format('d/m/Y H:i:s'), // Parse the time to a 24h format
         ];
     }

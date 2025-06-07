@@ -14,7 +14,9 @@ Route::controller(AuthController::class)->group(function ($router) {
 Route::middleware('custom-sanctum-auth')->group(function () {
     Route::post('get-weather-by-city', [WeatherController::class, 'getWeatherByCity']);
     Route::post('logout', [AuthController::class, 'logout']);
-    
+    Route::get('recent-searches', [WeatherController::class, 'getRecentSearches']);
+    Route::get('favorites', [WeatherController::class, 'getFavorites']);
+    Route::post('toggle-favorite', [WeatherController::class, 'toggleFavorite']);
 });
 
 
