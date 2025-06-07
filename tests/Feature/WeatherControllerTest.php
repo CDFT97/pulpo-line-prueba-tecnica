@@ -193,4 +193,80 @@ class WeatherControllerTest extends TestCase
                 ]
             ]);
     }
+
+    #[Test]
+    public function favorites_requires_authentication()
+    {
+        $response = $this->getJson('/api/favorites');
+
+        $response->assertStatus(401);
+    }
+
+    #[Test]
+    public function favorites_returns_empty_when_no_favorites()
+    {
+        $response = $this->withHeaders([
+            'Authorization' => 'Bearer ' . $this->token
+        ])->getJson('/api/favorites');
+
+        $response->assertStatus(200)
+            ->assertJson([
+                'data' => []
+            ]);
+    }
+
+    #[Test]
+    public function favorites_returns_user_favorites()
+    {
+        // Crear 3 ciudades
+        $cities = City::factory()->count(3)->create();
+
+        // Marcar como favoritas para el usuario
+        $cities->each(function ($city) {
+            $this->user->favorites()->create(['city_id' => $city->id]);
+        });
+
+        $response = $this->withHeaders([
+            'Authorization' => 'Bearer ' . $this->token
+        ])->getJson('/api/favorites');
+
+        $response->assertStatus(200)
+            ->assertJsonCount(3, 'data')
+            ->assertJsonStructure([
+                'data' => [
+                    '*' => [
+                        'id',
+                        'name',
+                        'region',
+                        'country',
+                        'timezone',
+                        'created_at',
+                        'updated_at'
+                    ]
+                ]
+            ]);
+    }
+
+    #[Test]
+    public function favorites_only_returns_current_user_favorites()
+    {
+        // Crear otro usuario
+        $otherUser = User::factory()->create();
+
+        // Ciudad favorita del usuario actual
+        $userCity = City::factory()->create();
+        $this->user->favorites()->create(['city_id' => $userCity->id]);
+
+        // Ciudad favorita de otro usuario
+        $otherCity = City::factory()->create();
+        $otherUser->favorites()->create(['city_id' => $otherCity->id]);
+
+        $response = $this->withHeaders([
+            'Authorization' => 'Bearer ' . $this->token
+        ])->getJson('/api/favorites');
+
+        $response->assertStatus(200)
+            ->assertJsonCount(1, 'data')
+            ->assertJsonPath('data.0.id', $userCity->id);
+    }
 }
