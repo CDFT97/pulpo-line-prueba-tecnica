@@ -113,6 +113,7 @@ class WeatherController extends Controller
                 'is_favorite' => $isFavorite,
                 'city_id' => $city->id
             ], Response::HTTP_OK);
+            
         } catch (\Throwable $th) {
             Log::error($th);
             return response()->json([
@@ -165,6 +166,7 @@ class WeatherController extends Controller
                 'message' => $message,
                 'is_favorite' => $result['action'] === 'added'
             ], Response::HTTP_OK);
+
         } catch (\Throwable $th) {
             Log::error($th);
             return response()->json([
@@ -205,6 +207,7 @@ class WeatherController extends Controller
             return response()->json([
                 'data' => $searches
             ], Response::HTTP_OK);
+
         } catch (\Throwable $th) {
             Log::error($th);
             return response()->json([
