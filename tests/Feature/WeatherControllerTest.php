@@ -269,4 +269,86 @@ class WeatherControllerTest extends TestCase
             ->assertJsonCount(1, 'data')
             ->assertJsonPath('data.0.id', $userCity->id);
     }
+
+    # -------
+    #[Test]
+    public function toggle_favorite_requires_authentication()
+    {
+        $response = $this->postJson('/api/toggle-favorite', [
+            'city_id' => 1
+        ]);
+
+        $response->assertStatus(401);
+    }
+
+    #[Test]
+    public function toggle_favorite_requires_city_id_parameter()
+    {
+        $response = $this->withHeaders([
+            'Authorization' => 'Bearer ' . $this->token
+        ])->postJson('/api/toggle-favorite');
+
+        $response->assertStatus(422)
+            ->assertJsonValidationErrors(['city_id']);
+    }
+
+    #[Test]
+    public function toggle_favorite_requires_valid_city_id()
+    {
+        $response = $this->withHeaders([
+            'Authorization' => 'Bearer ' . $this->token
+        ])->postJson('/api/toggle-favorite', [
+            'city_id' => 999 // ID inexistente
+        ]);
+
+        $response->assertStatus(422);
+    }
+
+    #[Test]
+    public function can_add_city_to_favorites()
+    {
+        $city = City::factory()->create();
+
+        $response = $this->withHeaders([
+            'Authorization' => 'Bearer ' . $this->token
+        ])->postJson('/api/toggle-favorite', [
+            'city_id' => $city->id
+        ]);
+
+        $response->assertStatus(200)
+            ->assertJson([
+                'message' => 'Ciudad agregada a favoritos',
+                'is_favorite' => true
+            ]);
+
+        $this->assertDatabaseHas('user_favorites', [
+            'user_id' => $this->user->id,
+            'city_id' => $city->id
+        ]);
+    }
+
+    #[Test]
+    public function can_remove_city_from_favorites()
+    {
+        $city = City::factory()->create();
+        $this->user->favorites()->create(['city_id' => $city->id]);
+
+        $response = $this->withHeaders([
+            'Authorization' => 'Bearer ' . $this->token
+        ])->postJson('/api/toggle-favorite', [
+            'city_id' => $city->id
+        ]);
+
+        $response->assertStatus(200)
+            ->assertJson([
+                'message' => 'Ciudad removida de favoritos',
+                'is_favorite' => false
+            ]);
+
+        $this->assertDatabaseMissing('user_favorites', [
+            'user_id' => $this->user->id,
+            'city_id' => $city->id
+        ]);
+    }
+
 }
