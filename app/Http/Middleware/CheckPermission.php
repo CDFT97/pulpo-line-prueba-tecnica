@@ -21,7 +21,7 @@ class CheckPermission
         // Verificar si el usuario tiene el permiso requerido
         if (!auth()->user()->hasPermission($permission)) {
             return response()->json([
-                'message' => 'No tienes permiso para acceder a este recurso',
+                'message' => __('messages.errors.unauthorized'),
                 'required_permission' => $permission
             ], 403);
         }

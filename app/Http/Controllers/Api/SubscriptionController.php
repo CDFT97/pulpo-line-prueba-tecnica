@@ -57,7 +57,7 @@ class SubscriptionController extends Controller
             
             if ($user->role->name !== 'free') {
                 return response()->json([
-                    'message' => 'You are already a premium user'
+                    'message' => __('messages.subscription.already_premium')
                 ], Response::HTTP_FORBIDDEN);
             }
 
@@ -66,12 +66,12 @@ class SubscriptionController extends Controller
             ]);
 
             return response()->json([
-                'message' => 'Now you are a premium user'
+                'message' => __('messages.subscription.upgraded')
             ], Response::HTTP_OK);
         } catch (\Throwable $th) {
             Log::error($th);
             return response()->json([
-                'message' => 'Error al actualizar el nivel de usuario',
+                'message' => __('messages.errors.internal_server_error'),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

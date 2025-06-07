@@ -65,12 +65,14 @@ class AuthController extends Controller
 
             return response()->json([
                 'user' => UserResource::make($user),
-                'message' => "Register successfully"
+                'message' => __('messages.auth.registered')
             ], Response::HTTP_CREATED);
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error($e->getMessage());
-            return response()->json("Register Failed", Response::HTTP_INTERNAL_SERVER_ERROR);
+            return response()->json([
+                'message' => __('messages.errors.internal_server_error')
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -116,18 +118,26 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
-        $user = $this->userRepository->getByEmail($request->email);
+        try {
+            $user = $this->userRepository->getByEmail($request->email);
+    
+            if (!$user || !Hash::check($request->password, $user->password)) {
+                return response()->json(['message' => __('messages.errors.invalid_credentials')], Response::HTTP_UNAUTHORIZED);
+            }
+    
+            $token = $user->createToken('api')->plainTextToken;
+    
+            return response()->json([
+                'token' => $token,
+                'user' => UserResource::make($user),
+            ], Response::HTTP_OK);
 
-        if (!$user || !Hash::check($request->password, $user->password)) {
-            return response()->json(['message' => "Invalid Credentials"], Response::HTTP_UNAUTHORIZED);
+        } catch (\Throwable $th) {
+            Log::error($th->getMessage());
+            return response()->json([
+                'message' => __('messages.errors.internal_server_error')
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-
-        $token = $user->createToken('api')->plainTextToken;
-
-        return response()->json([
-            'token' => $token,
-            'user' => UserResource::make($user),
-        ], Response::HTTP_OK);
     }
 
     /**
@@ -154,6 +164,6 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         auth()->user()->tokens()->delete();
-        return response()->json(['message' => 'Logged out successfully'], Response::HTTP_OK);
+        return response()->json(['message' => __('messages.auth.logged_out')], Response::HTTP_OK);
     }
 }

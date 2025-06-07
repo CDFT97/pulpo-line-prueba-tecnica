@@ -295,20 +295,8 @@
                     "Weather"
                 ],
                 "summary": "Obtener clima por ciudad",
-                "description": "Obtiene el clima de una ciudad determinada y registra la búsqueda",
+                "description": "Obtiene el clima de una ciudad determinada y registra la búsqueda. Se puede especificar el idioma de respuesta con el parámetro opcional 'lang' (valores aceptados: en, es).",
                 "operationId": "1b3bf575e880094fe3d81b1d05da8f50",
-                "parameters": [
-                    {
-                        "name": "lang",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "description": "Código de idioma (opcional)",
-                            "type": "string",
-                            "example": "es"
-                        }
-                    }
-                ],
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -319,8 +307,18 @@
                                 ],
                                 "properties": {
                                     "city": {
+                                        "description": "Nombre de la ciudad a consultar",
                                         "type": "string",
                                         "example": "Madrid"
+                                    },
+                                    "lang": {
+                                        "description": "Código de idioma para la respuesta (opcional). Valores aceptados: en, es",
+                                        "type": "string",
+                                        "enum": [
+                                            "en",
+                                            "es"
+                                        ],
+                                        "example": "es"
                                     }
                                 },
                                 "type": "object"
@@ -339,18 +337,22 @@
                                             "$ref": "#/components/schemas/WeatherCityResource"
                                         },
                                         "cached": {
+                                            "description": "Indica si los datos provienen de caché",
                                             "type": "boolean",
                                             "example": true
                                         },
                                         "expires_in": {
+                                            "description": "Tiempo restante para que expire el caché",
                                             "type": "string",
                                             "example": "24 minutes"
                                         },
                                         "cache_status": {
+                                            "description": "Estado del caché (valid, regenerated, new)",
                                             "type": "string",
                                             "example": "valid"
                                         },
                                         "is_favorite": {
+                                            "description": "Indica si la ciudad está marcada como favorita",
                                             "type": "boolean",
                                             "example": false
                                         }
@@ -360,15 +362,51 @@
                             }
                         }
                     },
-                    "401": {
-                        "description": "Credenciales inválidas",
+                    "400": {
+                        "description": "Solicitud incorrecta",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "Unauthorized"
+                                            "example": "El parámetro city es requerido"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "No autorizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Credenciales inválidas"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error del servidor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Error al obtener el clima"
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Detalles del error"
                                         }
                                     },
                                     "type": "object"

@@ -2,6 +2,7 @@
 
 use App\Http\Middleware\CustomSanctumAuth;
 use App\Http\Middleware\CheckPermission;
+use App\Http\Middleware\SetApplicationLocale;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -18,6 +19,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
+            'set-application-locale' => SetApplicationLocale::class,
             'abilities' => CheckAbilities::class,
             'ability' => CheckForAnyAbility::class,
             'custom-sanctum-auth' => CustomSanctumAuth::class,

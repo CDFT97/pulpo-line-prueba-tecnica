@@ -43,6 +43,15 @@ class UserStoreRequest extends FormRequest
     public function messages()
     {
         return [
+            'name.required' => __('messages.validation_errors.name_required'),
+            'name.max' => __('messages.validation_errors.invalid_name_max_length'),
+            'name.string' => __('messages.validation_errors.name_must_be_string'),
+            'email.required' => __('messages.validation_errors.email_required'),
+            'email.max' => __('messages.validation_errors.invalid_email_max_length'),
+            'email.email' => __('messages.validation_errors.email_must_be_valid'),
+            'email.unique' => __('messages.validation_errors.email_must_be_unique'),
+            'password.required' => __('messages.validation_errors.password_required'),
+            'password.confirmed' => __('messages.validation_errors.passwords_must_match'),
         ];
     }
 

@@ -40,48 +40,107 @@ class WeatherController extends Controller
      *     path="/get-weather-by-city",
      *     tags={"Weather"},
      *     summary="Obtener clima por ciudad", 
-     *     description="Obtiene el clima de una ciudad determinada y registra la búsqueda",
+     *     description="Obtiene el clima de una ciudad determinada y registra la búsqueda. Se puede especificar el idioma de respuesta con el parámetro opcional 'lang' (valores aceptados: en, es).",
      *     security={{"bearerAuth": {}}},
      *     @OA\RequestBody( 
      *         required=true,
      *         @OA\JsonContent(
      *             required={"city"},
-     *             @OA\Property(property="city", type="string", example="Madrid"),
+     *             @OA\Property(
+     *                 property="city",
+     *                 type="string",
+     *                 example="Madrid",
+     *                 description="Nombre de la ciudad a consultar"
+     *             ),
+     *             @OA\Property(
+     *                 property="lang",
+     *                 type="string",
+     *                 example="es",
+     *                 description="Código de idioma para la respuesta (opcional). Valores aceptados: en, es",
+     *                 enum={"en", "es"}
+     *             )
      *         )
      *     ),
-     *     @OA\Parameter(
-     *         name="lang",
-     *         in="query",
-     *         required=false,
-     *         @OA\Schema(type="string", example="es", description="Código de idioma (opcional)")
-     *     ),
      *     @OA\Response(
-     *         response="200",
+     *         response=200,
      *         description="Respuesta exitosa",
      *         @OA\JsonContent(
      *             type="object",
      *             @OA\Property(property="data", ref="#/components/schemas/WeatherCityResource"),
-     *             @OA\Property(property="cached", type="boolean", example=true),
-     *             @OA\Property(property="expires_in", type="string", example="24 minutes"),
-     *             @OA\Property(property="cache_status", type="string", example="valid"),
-     *             @OA\Property(property="is_favorite", type="boolean", example=false)
+     *             @OA\Property(
+     *                 property="cached", 
+     *                 type="boolean", 
+     *                 example=true,
+     *                 description="Indica si los datos provienen de caché"
+     *             ),
+     *             @OA\Property(
+     *                 property="expires_in", 
+     *                 type="string", 
+     *                 example="24 minutes",
+     *                 description="Tiempo restante para que expire el caché"
+     *             ),
+     *             @OA\Property(
+     *                 property="cache_status", 
+     *                 type="string", 
+     *                 example="valid",
+     *                 description="Estado del caché (valid, regenerated, new)"
+     *             ),
+     *             @OA\Property(
+     *                 property="is_favorite", 
+     *                 type="boolean", 
+     *                 example=false,
+     *                 description="Indica si la ciudad está marcada como favorita"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Solicitud incorrecta",
+     *         @OA\JsonContent(
+     *             @OA\Property(
+     *                 property="message", 
+     *                 type="string", 
+     *                 example="El parámetro city es requerido"
+     *             )
      *         )
      *     ),
      *     @OA\Response(
      *         response=401,
-     *         description="Credenciales inválidas",
+     *         description="No autorizado",
      *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="Unauthorized")
+     *             @OA\Property(
+     *                 property="message", 
+     *                 type="string", 
+     *                 example="Credenciales inválidas"
+     *             )
      *         )
      *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error del servidor",
+     *         @OA\JsonContent(
+     *             @OA\Property(
+     *                 property="message", 
+     *                 type="string", 
+     *                 example="Error al obtener el clima"
+     *             ),
+     *             @OA\Property(
+     *                 property="error", 
+     *                 type="string", 
+     *                 example="Detalles del error"
+     *             )
+     *         )
+     *     )
      * )
      */
     public function getWeatherByCity(WeatherCityRequest $request)
     {
         try {
+            $validatedData = $request->validated();
+
             $weatherData = $this->handleWeatherCache(
-                $request->city,
-                $request->lang ?? null
+                $validatedData['city'],
+                $validatedData['lang'] ?? null
             );
 
             // Registrar la ciudad y la búsqueda
@@ -113,11 +172,11 @@ class WeatherController extends Controller
                 'is_favorite' => $isFavorite,
                 'city_id' => $city->id
             ], Response::HTTP_OK);
-            
+
         } catch (\Throwable $th) {
             Log::error($th);
             return response()->json([
-                'message' => 'Error al obtener el clima',
+                'message' => __('messages.errors.internal_server_error'),
                 'timestamp' => now()->toDateTimeString(),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -160,7 +219,7 @@ class WeatherController extends Controller
                 $request->city_id
             );
 
-            $message = $result['action'] === 'added' ? 'Ciudad agregada a favoritos' : 'Ciudad removida de favoritos';
+            $message = $result['action'] === 'added' ? __('messages.favorites.added') : __('messages.favorites.removed');
 
             return response()->json([
                 'message' => $message,
@@ -170,7 +229,7 @@ class WeatherController extends Controller
         } catch (\Throwable $th) {
             Log::error($th);
             return response()->json([
-                'message' => 'Error al gestionar la ciudad en favoritos',
+                'message' => __('messages.errors.internal_server_error'),
                 'is_favorite' => false
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -211,7 +270,7 @@ class WeatherController extends Controller
         } catch (\Throwable $th) {
             Log::error($th);
             return response()->json([
-                'message' => 'Error al obtener las búsquedas recientes',
+                'message' => __('messages.errors.internal_server_error'),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -243,15 +302,14 @@ class WeatherController extends Controller
             $favorites = $this->userFavoriteRepository
                 ->getUserFavorites($request->user()->id)
                 ->pluck('city');
-    
+
             return response()->json([
                 'data' => $favorites
             ], Response::HTTP_OK);
-
         } catch (\Throwable $th) {
             Log::error($th);
             return response()->json([
-                'message' => 'Error al obtener las ciudades favoritas',
+                'message' => __('messages.errors.internal_server_error'),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

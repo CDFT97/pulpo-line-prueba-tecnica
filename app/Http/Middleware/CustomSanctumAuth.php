@@ -24,7 +24,7 @@ class CustomSanctumAuth
         if (!$user) {
             // Si la autenticación falla (no hay token válido, o no se encontró usuario)
             return new JsonResponse([
-                'message' => 'Acceso no autorizado. Por favor, proporcione un token de autenticación válido.',
+                'message' => __('messages.errors.unauthorized'),
                 'status' => 'error',
                 'timestamp' => now()->toDateTimeString(),
             ], 401);

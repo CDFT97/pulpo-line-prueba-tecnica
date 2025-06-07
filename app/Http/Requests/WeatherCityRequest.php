@@ -28,12 +28,19 @@ class WeatherCityRequest extends FormRequest
     {
         return [
             'city' => 'required|string|max:150',
+            'lang' => 'string|max:2|min:2'
         ];
     }
 
     public function messages()
     {
-        return [];
+        return [
+            'city.required' => __('messages.validation_errors.city_required'),
+            'city.max' => __('messages.validation_errors.invalid_city_max_length'),
+            'lang.max' => __('messages.validation_errors.invalid_lang_length'),
+            'lang.min' => __('messages.validation_errors.invalid_lang_length'),
+            'lang.string' => __('messages.validation_errors.lang_must_be_string'),
+        ];
     }
 
     protected function failedValidation(Validator $validator)

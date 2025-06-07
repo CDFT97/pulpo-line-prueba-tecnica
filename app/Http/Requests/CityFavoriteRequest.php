@@ -33,7 +33,10 @@ class CityFavoriteRequest extends FormRequest
 
     public function messages()
     {
-        return [];
+        return [
+            'city_id.required' => __('messages.validation_errors.city_id_required'),
+            'city_id.exists' => __('messages.validation_errors.city_id_must_exist'),
+        ];
     }
 
     protected function failedValidation(Validator $validator)
