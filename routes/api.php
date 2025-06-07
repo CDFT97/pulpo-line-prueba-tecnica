@@ -11,8 +11,7 @@ Route::controller(AuthController::class)->group(function ($router) {
 
 
 Route::middleware('custom-sanctum-auth')->group(function () {
-    Route::get('logout', [AuthController::class, 'logout']);
-    
+    Route::post('logout', [AuthController::class, 'logout']);
 });
 
 

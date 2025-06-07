@@ -25,19 +25,17 @@ class AuthController extends Controller
     /**
      * @OA\post(
      *     path="/register",
-     *     tags={"User"},
+     *     tags={"Auth"},
      *     summary="Register",
      *     description="Register new customer/user",
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
-     *             required={"name", "last_name","email", "phone", "password", "password_confirmation"},
+     *             required={"name","email", "password", "password_confirmation"},
      *             @OA\Property(property="name", type="string", example="John"),
-     *             @OA\Property(property="last_name", type="string", example="Doe"),
-     *             @OA\Property(property="phone", type="string", example="+521231312"),
      *             @OA\Property(property="email", type="string", format="email", example="john@example.com"),
-     *             @OA\Property(property="password", type="string", format="password", example="12345678"),
-     *             @OA\Property(property="password_confirmation", type="string", format="password", example="12345678")
+     *             @OA\Property(property="password", type="string", format="password", example="Abcd1234#"),
+     *             @OA\Property(property="password_confirmation", type="string", format="password", example="Abcd1234#")
      *         )
      *     ),
      *     @OA\Response(
@@ -50,7 +48,6 @@ class AuthController extends Controller
      *     )
      * )
      */
-
     public function register(UserStoreRequest $request)
     {
         try {
@@ -59,14 +56,13 @@ class AuthController extends Controller
             $user = $this->userRepository->create($request->validated());
 
             $this->userRepository->save($user);
-            
+
             DB::commit();
 
             return response()->json([
                 'user' => UserResource::make($user),
                 'message' => "Register successfully"
             ], Response::HTTP_OK);
-
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error($e->getMessage());
@@ -74,6 +70,46 @@ class AuthController extends Controller
         }
     }
 
+    /**
+     * @OA\Post(
+     *     path="/login",
+     *     tags={"Auth"},
+     *     summary="Iniciar sesión", 
+     *     description="Autentica al usuario y devuelve un token de acceso.",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\RequestBody( 
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"email", "password"},
+     *             @OA\Property(property="email", type="string", format="email", example="john@example.com"),
+     *             @OA\Property(property="password", type="string", example="Abcd1234#"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="Respuesta exitosa",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(ref="#/components/schemas/UserResource")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Credenciales inválidas",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Unauthorized")
+     *         )
+     *     ),
+     *     @OA\Response( 
+     *         response=422,
+     *         description="Errores de validación",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="The given data was invalid."),
+     *             @OA\Property(property="errors", type="object", example={"email": {"The email field is required."}})
+     *         )
+     *     )
+     * )
+     */
     public function login(Request $request)
     {
         $user = $this->userRepository->getByEmail($request->email);
@@ -90,6 +126,33 @@ class AuthController extends Controller
         ], Response::HTTP_OK);
     }
 
+    /**
+     * @OA\Post(
+     *      path="/logout", 
+     *      operationId="logoutUser", 
+     *      tags={"Auth"},
+     *      summary="Cerrar la sesión del usuario",
+     *      description="Elimina los tokens de autenticación del usuario actual, cerrando su sesión.",
+     *      security={{"bearerAuth": {}}},
+     *      @OA\Response(
+     *          response=200,
+     *          description="Sesión cerrada exitosamente",
+     *          @OA\JsonContent(
+     *              @OA\Property(property="message", type="string", example="Logged out successfully")
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="No autorizado (token inválido o ausente)",
+     *          @OA\JsonContent(
+     *              @OA\Property(property="message", type="string", example="Acceso no autorizado. Por favor, proporcione un token de autenticación válido."),
+     *              @OA\Property(property="status", type="string", example="error"),
+     *              @OA\Property(property="code", type="integer", example=40101),
+     *              @OA\Property(property="timestamp", type="string", format="date-time", example="2024-06-06T12:30:00.000000Z")
+     *          )
+     *      )
+     * )
+     */
     public function logout(Request $request)
     {
         auth()->user()->tokens()->delete();
