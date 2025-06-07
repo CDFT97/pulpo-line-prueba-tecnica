@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\CustomSanctumAuth;
+use App\Http\Middleware\CheckPermission;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -20,6 +21,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'abilities' => CheckAbilities::class,
             'ability' => CheckForAnyAbility::class,
             'custom-sanctum-auth' => CustomSanctumAuth::class,
+            'permission' => CheckPermission::class,
         ]);
 
     })

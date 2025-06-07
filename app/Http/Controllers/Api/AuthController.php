@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserStoreRequest;
 use App\Http\Resources\UserResource;
+use App\Models\Role;
 use App\Repositories\UserRepository;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -53,7 +54,10 @@ class AuthController extends Controller
         try {
             DB::beginTransaction();
 
-            $user = $this->userRepository->create($request->validated());
+            $userData = $request->validated();
+            $userData['role_id'] = Role::ROLE_FREE['id'];
+            
+            $user = $this->userRepository->create($userData);
 
             $this->userRepository->save($user);
 

@@ -29,6 +29,12 @@ class UserResource extends JsonResource
      *       description="Email of User",
      *       example="pedro@gmail.com"
      *   ),
+     *   @OA\Property(
+     *       property="role",
+     *       type="string",
+     *       description="Role name of user",
+     *       example="free"
+     *   ),
      * )
      */
     public function toArray(Request $request): array
@@ -37,6 +43,7 @@ class UserResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
+            'role' => $this->role ? $this->role->name : '',
         ];
     }
 }

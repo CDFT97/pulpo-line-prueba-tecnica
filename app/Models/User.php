@@ -22,6 +22,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role_id'
     ];
 
     /**
@@ -55,5 +56,15 @@ class User extends Authenticatable
     public function favorites()
     {
         return $this->hasMany(UserFavorite::class)->latest();
+    }
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
+
+    public function hasPermission($permissionName)
+    {
+        return $this->role->permissions()->where('name', $permissionName)->exists();
     }
 }
