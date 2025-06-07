@@ -194,33 +194,7 @@
                         }
                     },
                     "401": {
-                        "description": "No autorizado (token inválido o ausente)",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Acceso no autorizado. Por favor, proporcione un token de autenticación válido."
-                                        },
-                                        "status": {
-                                            "type": "string",
-                                            "example": "error"
-                                        },
-                                        "code": {
-                                            "type": "integer",
-                                            "example": 40101
-                                        },
-                                        "timestamp": {
-                                            "type": "string",
-                                            "format": "date-time",
-                                            "example": "2024-06-06T12:30:00.000000Z"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
+                        "$ref": "#/components/responses/UnauthorizedError"
                     }
                 },
                 "security": [
@@ -252,6 +226,37 @@
                     }
                 },
                 "type": "object"
+            }
+        },
+        "responses": {
+            "UnauthorizedError": {
+                "description": "No autorizado (token inválido o ausente)",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "message": {
+                                    "type": "string",
+                                    "example": "Acceso no autorizado. Por favor, proporcione un token de autenticación válido."
+                                },
+                                "status": {
+                                    "type": "string",
+                                    "example": "error"
+                                },
+                                "code": {
+                                    "type": "integer",
+                                    "example": 40101
+                                },
+                                "timestamp": {
+                                    "type": "string",
+                                    "format": "date-time",
+                                    "example": "2024-06-06T12:30:00.000000Z"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
             }
         },
         "securitySchemes": {
