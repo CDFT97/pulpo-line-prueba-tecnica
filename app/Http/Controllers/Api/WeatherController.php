@@ -191,7 +191,7 @@ class WeatherController extends Controller
      *             @OA\Property(
      *                 property="data",
      *                 type="array",
-     *                 @OA\Items(ref="#/components/schemas/City")
+     *                 @OA\Items(ref="#/components/schemas/CityResource")
      *             )
      *         )
      *     )
@@ -231,7 +231,7 @@ class WeatherController extends Controller
      *             @OA\Property(
      *                 property="data",
      *                 type="array",
-     *                 @OA\Items(ref="#/components/schemas/City")
+     *                 @OA\Items(ref="#/components/schemas/CityResource")
      *             )
      *         )
      *     )

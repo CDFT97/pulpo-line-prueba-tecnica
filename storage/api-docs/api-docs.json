@@ -57,7 +57,7 @@
                     }
                 },
                 "responses": {
-                    "200": {
+                    "201": {
                         "description": "Successful response",
                         "content": {
                             "application/json": {
@@ -195,6 +195,91 @@
                     },
                     "401": {
                         "$ref": "#/components/responses/UnauthorizedError"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/upgrade-to-premium": {
+            "get": {
+                "tags": [
+                    "Subscription"
+                ],
+                "summary": "Actualizar usuario a premium",
+                "description": "Actualiza el rol del usuario autenticado a premium, otorgando acceso a funcionalidades exclusivas",
+                "operationId": "35beea78523c57efb406a980b0fc46d3",
+                "responses": {
+                    "200": {
+                        "description": "Actualización exitosa a premium",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Ahora tienes acceso a todas las funcionalidades premium"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "No autenticado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Permiso denegado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Ya tienes una cuenta premium"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error del servidor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Ocurrió un error al actualizar tu cuenta"
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Detalles del error"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -376,7 +461,7 @@
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/components/schemas/City"
+                                                "$ref": "#/components/schemas/CityResource"
                                             }
                                         }
                                     },
@@ -411,7 +496,7 @@
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/components/schemas/City"
+                                                "$ref": "#/components/schemas/CityResource"
                                             }
                                         }
                                     },
@@ -431,7 +516,7 @@
     },
     "components": {
         "schemas": {
-            "City": {
+            "CityResource": {
                 "properties": {
                     "id": {
                         "description": "ID único de la ciudad",
@@ -489,6 +574,11 @@
                         "description": "Email of User",
                         "type": "string",
                         "example": "pedro@gmail.com"
+                    },
+                    "role": {
+                        "description": "Role name of user",
+                        "type": "string",
+                        "example": "free"
                     }
                 },
                 "type": "object"
@@ -613,6 +703,10 @@
         {
             "name": "Auth",
             "description": "Auth"
+        },
+        {
+            "name": "Subscription",
+            "description": "Subscription"
         },
         {
             "name": "Weather",
