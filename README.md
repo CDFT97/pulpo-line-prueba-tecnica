@@ -142,3 +142,4 @@ Este proyecto está licenciado bajo la licencia MIT.
 *   Al registrarse, el usuario obtiene el rol/licencia **"free"**, el cual **NO** permite acceder a ningún endpoint de **WEATHER**.
 *   Para poder acceder a los endpoints de **WEATHER**, el usuario debe actualizar su rol a **"premium"** utilizando el endpoint **"Upgrade To Premium"**.
 *   Todos los endpoints de **WEATHER** requieren **autenticación**. Por lo tanto, el usuario debe iniciar sesión (ejecutar el endpoint **"Login"**) y proporcionar un token de autenticación válido para poder acceder a ellos.
+* Por cierto, la app es multi-idioma, puedes pasar el query param `lang` para cambiar el idioma de la respuesta. (aunque por ahora solo soporta inlges y español) lang=en o lang=es
