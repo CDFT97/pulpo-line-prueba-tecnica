@@ -13,7 +13,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"name\" : \"Cesar Febres\",\r\n    \"email\" : \"febrescesarsd7@gmail.com\",\r\n    \"password\": \"Abcd1334.\",\r\n    \"password_confirmation\": \"Abcd1334.\"\r\n}",
+					"raw": "{\r\n    \"name\" : \"Cesar Febres\",\r\n    \"email\" : \"febrescesard7@gmail.com\",\r\n    \"password\": \"Abcd1334.\",\r\n    \"password_confirmation\": \"Abcd1334.\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -21,15 +21,10 @@
 					}
 				},
 				"url": {
-					"raw": "http://127.0.0.1:8000/api/register",
-					"protocol": "http",
+					"raw": "{{app_url}}/api/register",
 					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
+						"{{app_url}}"
 					],
-					"port": "8000",
 					"path": [
 						"api",
 						"register"
@@ -45,7 +40,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"email\": \"febrescesars7@gmail.com\",\r\n    \"password\": \"Abcd1334.\"\r\n}",
+					"raw": "{\r\n    \"email\": \"febrescesard7@gmail.com\",\r\n    \"password\": \"Abcd1334.\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -53,15 +48,10 @@
 					}
 				},
 				"url": {
-					"raw": "http://127.0.0.1:8000/api/login",
-					"protocol": "http",
+					"raw": "{{app_url}}/api/login",
 					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
+						"{{app_url}}"
 					],
-					"port": "8000",
 					"path": [
 						"api",
 						"login"
@@ -98,15 +88,10 @@
 					}
 				},
 				"url": {
-					"raw": "http://127.0.0.1:8000/api/logout",
-					"protocol": "http",
+					"raw": "{{app_url}}/api/logout",
 					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
+						"{{app_url}}"
 					],
-					"port": "8000",
 					"path": [
 						"api",
 						"logout"
@@ -116,20 +101,15 @@
 			"response": []
 		},
 		{
-			"name": "AUTH: Get Premiun Role",
+			"name": "User: Upgrade to premiun",
 			"request": {
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://127.0.0.1:8000/api/upgrade-to-premium?lang=es",
-					"protocol": "http",
+					"raw": "{{app_url}}/api/upgrade-to-premium?lang=es",
 					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
+						"{{app_url}}"
 					],
-					"port": "8000",
 					"path": [
 						"api",
 						"upgrade-to-premium"
@@ -159,15 +139,10 @@
 					}
 				},
 				"url": {
-					"raw": "http://127.0.0.1:8000/api/get-weather-by-city?lang=es",
-					"protocol": "http",
+					"raw": "{{app_url}}/api/get-weather-by-city?lang=es",
 					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
+						"{{app_url}}"
 					],
-					"port": "8000",
 					"path": [
 						"api",
 						"get-weather-by-city"
@@ -188,15 +163,10 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://127.0.0.1:8000/api/recent-searches",
-					"protocol": "http",
+					"raw": "{{app_url}}/api/recent-searches",
 					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
+						"{{app_url}}"
 					],
-					"port": "8000",
 					"path": [
 						"api",
 						"recent-searches"
@@ -220,15 +190,10 @@
 					}
 				},
 				"url": {
-					"raw": "http://127.0.0.1:8000/api/toggle-favorite?lang=en",
-					"protocol": "http",
+					"raw": "{{app_url}}/api/toggle-favorite?lang=en",
 					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
+						"{{app_url}}"
 					],
-					"port": "8000",
 					"path": [
 						"api",
 						"toggle-favorite"
@@ -249,15 +214,10 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://127.0.0.1:8000/api/favorites",
-					"protocol": "http",
+					"raw": "{{app_url}}/api/favorites",
 					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
+						"{{app_url}}"
 					],
-					"port": "8000",
 					"path": [
 						"api",
 						"favorites"
@@ -272,7 +232,7 @@
 		"bearer": [
 			{
 				"key": "token",
-				"value": "2|rln5vU5eSwaOPyQGo8g5Q1Kkf6B8a6cVhXrSWojC9643828a",
+				"value": "1|yP005s6tvPcOMtLKCtrQTzuGfmWdeLQuEiGqF6dDdb22c570",
 				"type": "string"
 			}
 		]
@@ -295,6 +255,19 @@
 					""
 				]
 			}
+		}
+	],
+	"variable": [
+		{
+			"key": "app_url",
+			"value": "http://127.0.0.1:8000",
+			"type": "string",
+			"disabled": true
+		},
+		{
+			"key": "app_url",
+			"value": "https://weatherapi-app.laravel.cloud",
+			"type": "string"
 		}
 	]
 }
