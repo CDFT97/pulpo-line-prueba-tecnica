@@ -109,6 +109,36 @@ php artisan test
 
 ## 🌐 Demo Online
 Puedes explorar una versión de la API desplegada en línea en la siguiente URL:
-[AQUÍ_VA_LA_URL_DE_TU_DEMO]
+https://weatherapi-app.laravel.cloud/api
+
+Acceder a la documentación de la API en línea en la siguiente URL:
+https://weatherapi-app.laravel.cloud/api/documentation
+
 Nota: Al ser un proyecto de prueba alojado en un servidor gratuito, la disponibilidad y el rendimiento pueden variar. Es posible que el servidor deje de funcionar en cualquier momento.
 
+
+## 📝 Licencia
+Este proyecto está licenciado bajo la licencia MIT.
+
+
+## 📄 Guia rapida de uso
+Existen 4 endpoints relacionados al AUTH:
+1 - Registro 
+2 - Login
+3 - Logout
+4 - Upgrade To Premium
+
+Existen 3 endpoints relacionados al WEATHER:
+1 - Get Weather By City
+2 - Get Recent Searches
+3 - Get Favorites
+4 - Toggle Favorite
+
+
+Una vez registrado el usuario posee un rol/licencia "free", con la cual NO puede acceder a los endpoints de WEATHER.
+
+Para acceder a los endpoints de WEATHER, debe actualizar su rol a "premium" ejecutando el endpoint "Upgrade To Premium".
+
+Una vez actualizado el rol a "premium", puede acceder a todos los endpoints de WEATHER.
+
+Los endpoints de WEATHER requieren autenticación, por lo que debe realizar el login antes de acceder a ellos.
