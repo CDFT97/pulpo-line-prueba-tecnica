@@ -121,24 +121,24 @@ Nota: Al ser un proyecto de prueba alojado en un servidor gratuito, la disponibi
 Este proyecto está licenciado bajo la licencia MIT.
 
 
-## 📄 Guia rapida de uso
-Existen 4 endpoints relacionados al AUTH:
-1 - Registro 
-2 - Login
-3 - Logout
-4 - Upgrade To Premium
+## 📄 Guía rápida de uso
 
-Existen 3 endpoints relacionados al WEATHER:
-1 - Get Weather By City
-2 - Get Recent Searches
-3 - Get Favorites
-4 - Toggle Favorite
+### Endpoints de Autenticación (AUTH)
 
+1.  **Registro:** Permite crear una nueva cuenta de usuario.
+2.  **Login:** Permite iniciar sesión con una cuenta existente y obtener un token de autenticación.
+3.  **Logout:** Permite cerrar la sesión del usuario, invalidando el token de autenticación.
+4.  **Upgrade To Premium:** Permite actualizar el rol/licencia del usuario de "free" a "premium".
 
-Una vez registrado el usuario posee un rol/licencia "free", con la cual NO puede acceder a los endpoints de WEATHER.
+### Endpoints del Clima (WEATHER)
 
-Para acceder a los endpoints de WEATHER, debe actualizar su rol a "premium" ejecutando el endpoint "Upgrade To Premium".
+1.  **Get Weather By City:** Permite obtener la información meteorológica de una ciudad específica.
+2.  **Get Recent Searches:** Permite obtener el historial de las últimas búsquedas de clima realizadas por el usuario.
+3.  **Get Favorites:** Permite obtener la lista de ciudades marcadas como favoritas por el usuario.
+4.  **Toggle Favorite:** Permite agregar o eliminar una ciudad de la lista de favoritos del usuario.
 
-Una vez actualizado el rol a "premium", puede acceder a todos los endpoints de WEATHER.
+### Restricciones de Acceso
 
-Los endpoints de WEATHER requieren autenticación, por lo que debe realizar el login antes de acceder a ellos.
+*   Al registrarse, el usuario obtiene el rol/licencia **"free"**, el cual **NO** permite acceder a ningún endpoint de **WEATHER**.
+*   Para poder acceder a los endpoints de **WEATHER**, el usuario debe actualizar su rol a **"premium"** utilizando el endpoint **"Upgrade To Premium"**.
+*   Todos los endpoints de **WEATHER** requieren **autenticación**. Por lo tanto, el usuario debe iniciar sesión (ejecutar el endpoint **"Login"**) y proporcionar un token de autenticación válido para poder acceder a ellos.
