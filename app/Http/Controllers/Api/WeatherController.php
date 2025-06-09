@@ -172,9 +172,29 @@ class WeatherController extends Controller
                 'is_favorite' => $isFavorite,
                 'city_id' => $city->id
             ], Response::HTTP_OK);
-
         } catch (\Throwable $th) {
             Log::error($th);
+
+            if ($th instanceof \GuzzleHttp\Exception\ClientException) {
+                $response = $th->getResponse();
+                $statusCode = $response->getStatusCode();
+                $errorBody = json_decode($response->getBody()->getContents(), true);
+                
+                if ($statusCode === 400 && isset($errorBody['error']['code']) && $errorBody['error']['code'] === 1006) {
+                    return response()->json([
+                        'message' => __('messages.errors.weather_api_errors.location_not_found'),
+                        'timestamp' => now()->toDateTimeString(),
+                    ], Response::HTTP_NOT_FOUND);
+                }
+
+                // Errores generales de la api
+                return response()->json([
+                    'message' => __('messages.errors.weather_api_error'),
+                    'details' => $errorBody['error']['message'] ?? 'Unknown error',
+                    'timestamp' => now()->toDateTimeString(),
+                ], $statusCode);
+            }
+
             return response()->json([
                 'message' => __('messages.errors.internal_server_error'),
                 'timestamp' => now()->toDateTimeString(),
@@ -225,7 +245,6 @@ class WeatherController extends Controller
                 'message' => $message,
                 'is_favorite' => $result['action'] === 'added'
             ], Response::HTTP_OK);
-
         } catch (\Throwable $th) {
             Log::error($th);
             return response()->json([
@@ -266,7 +285,6 @@ class WeatherController extends Controller
             return response()->json([
                 'data' => $searches
             ], Response::HTTP_OK);
-
         } catch (\Throwable $th) {
             Log::error($th);
             return response()->json([

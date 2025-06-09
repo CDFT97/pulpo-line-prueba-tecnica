@@ -22,7 +22,7 @@ return [
   ],
   'favorites' => [
     'added' => 'Ciudad agregada a favoritos',
-    'removed' => 'Ciudad removida de favoritos' 
+    'removed' => 'Ciudad removida de favoritos'
   ],
   'validation_errors' => [
     'city_required' => 'The city parameter is required',
@@ -40,5 +40,10 @@ return [
     'passwords_must_match' => 'The passwords parameters must match',
     'city_id_required' => 'The city_id parameter is required',
     'city_id_must_exist' => 'The city_id parameter must exist'
+  ],
+  'errors' => [
+    'weather_api_errors' => [
+      'location_not_found' => 'City not found, please try with another one',
+    ],
   ]
 ];

@@ -40,5 +40,10 @@ return [
     'passwords_must_match' => 'Las contraseñas deben coincidir',
     'city_id_required' => 'El parámetro city_id es requerido',
     'city_id_must_exist' => 'El parámetro city_id debe existir'
+  ],
+  'errors' => [
+    'weather_api_errors' => [
+      'location_not_found' => 'Ciudad no encontrada, por favor intenta con otra',
+    ],
   ]
 ];
